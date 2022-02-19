@@ -56,6 +56,10 @@ The flags are:
 		directory containing alternate template files; if set,
 		the directory may provide alternative template files
 		for the files in $GOROOT/lib/godoc
+	-plugin=path
+		path to a plugin that can be used to customize functions
+		`URLForSrc`, `URLForSrcPos`, `URLForSrcQuery`. See godoc
+		`Presentation` for the required signature of these functions.
 	-url=path
 		print to standard output the data that would be served by
 		an HTTP request for path

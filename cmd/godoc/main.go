@@ -62,6 +62,9 @@ var (
 	// network
 	httpAddr = flag.String("http", defaultAddr, "HTTP service address")
 
+	// plugin
+	pluginFlag = flag.String("plugin", "", "path to plugin to customize src url")
+
 	// layout control
 	urlFlag = flag.String("url", "", "print HTML for named URL")
 
@@ -74,6 +77,7 @@ var (
 	// layout control
 	showTimestamps = flag.Bool("timestamps", false, "show timestamps with directory listings")
 	templateDir    = flag.String("templates", "", "load templates/JS/CSS from disk in this directory")
+	templateGoDoc  = flag.String("template-godoc", "", "override godoc.html")
 	showPlayground = flag.Bool("play", false, "enable playground")
 	declLinks      = flag.Bool("links", true, "link identifiers to their declarations")
 
@@ -192,6 +196,9 @@ func main() {
 		fs.Bind("/lib/godoc", vfs.OS(*templateDir), "/", vfs.BindBefore)
 		fs.Bind("/favicon.ico", vfs.OS(*templateDir), "/favicon.ico", vfs.BindReplace)
 	} else {
+		if *templateGoDoc != "" {
+			fs.Bind("/lib/godoc/godoc.html", vfs.OS(*templateGoDoc), "/", vfs.BindReplace)
+		}
 		fs.Bind("/lib/godoc", mapfs.New(static.Files), "/", vfs.BindReplace)
 		fs.Bind("/favicon.ico", mapfs.New(static.Files), "/favicon.ico", vfs.BindReplace)
 	}
@@ -296,6 +303,9 @@ func main() {
 		pres.NotesRx = regexp.MustCompile(*notesRx)
 	}
 
+	if *pluginFlag != "" {
+		registerPlugin(pres, *pluginFlag)
+	}
 	readTemplates(pres)
 	registerHandlers(pres)
 

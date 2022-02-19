@@ -1,4 +1,4 @@
-module golang.org/x/tools/gopls
+module github.com/maroux/go-tools/gopls
 
 go 1.18
 
